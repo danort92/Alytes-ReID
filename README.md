@@ -34,7 +34,7 @@ Then open the local URL shown in the terminal. The app lets you:
 
 ```
 Input Image → [Detection] → [Segmentation] → [Preprocessing] → [Re-ID] → Match
-                YOLOv8         SAM2            Align + Norm      Metric Learning
+                YOLO11         SAM2            Align + Norm      Metric Learning
 ```
 
 ### Module 1: Detection & Segmentation
@@ -63,12 +63,12 @@ Input Image → [Detection] → [Segmentation] → [Preprocessing] → [Re-ID] �
 Alytes-ReID/
 ├── app.py                     # Gradio web interface
 ├── config/
-│   ├── detection.yaml         # YOLOv8 training config
+│   ├── detection.yaml         # YOLO11 training config
 │   ├── preprocessing.yaml     # Preprocessing parameters
 │   └── reid.yaml              # Re-ID model config
 ├── src/
 │   ├── data/                  # Data download & preparation
-│   ├── detection/             # YOLOv8 training, prediction, evaluation
+│   ├── detection/             # YOLO11 training, prediction, evaluation
 │   ├── segmentation/          # SAM2 segmentation wrapper
 │   ├── preprocessing/         # Alignment, normalization, pipeline
 │   ├── reid/                  # Model, training, database, matching
@@ -106,12 +106,15 @@ pip install -e ".[dev,reid,ui]"
 ## Data
 
 ### Public Data (for detection training)
-- **Roboflow frogs dataset**: ~350 annotated images including Alytes
-- **iNaturalist**: Alytes obstetricans images via API (research-grade)
+- **iNaturalist**: Alytes obstetricans images via public API (research-grade, no key needed)
+- **Auto-annotation**: YOLO11 pretrained on COCO (class "frog") generates bounding boxes automatically
 
 ```bash
 # Download iNaturalist images
 python -m src.data.download_inat --output data/raw/inaturalist --max-images 1000
+
+# Auto-annotate (no manual annotation needed)
+python -m src.data.auto_annotate --images data/raw/inaturalist --output data/raw/auto_labels
 ```
 
 ### Private Data (for re-ID)
