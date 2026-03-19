@@ -28,7 +28,7 @@ def auto_annotate(
     images_dir: Path,
     output_dir: Path,
     model_name: str = "yolov8s-worldv2",
-    confidence: float = 0.05,
+    confidence: float = 0.10,
     iou: float = 0.45,
     device: str | None = None,
     text_classes: list[str] | None = None,
@@ -162,8 +162,8 @@ def main() -> None:
     parser.add_argument(
         "--confidence",
         type=float,
-        default=0.05,
-        help="Minimum detection confidence (default: 0.05)",
+        default=0.10,
+        help="Minimum detection confidence (default: 0.10)",
     )
     args = parser.parse_args()
 
