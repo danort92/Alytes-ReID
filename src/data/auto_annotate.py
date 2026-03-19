@@ -17,7 +17,8 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 # Text prompts for open-vocabulary detection
-DEFAULT_CLASSES = ["toad", "frog"]
+# Multiple prompts improve recall on diverse wildlife photos
+DEFAULT_CLASSES = ["toad", "frog", "amphibian"]
 
 # Remapped class for our single-class detector
 TARGET_CLASS = 0
@@ -27,7 +28,7 @@ def auto_annotate(
     images_dir: Path,
     output_dir: Path,
     model_name: str = "yolov8s-worldv2",
-    confidence: float = 0.10,
+    confidence: float = 0.05,
     iou: float = 0.45,
     device: str | None = None,
     text_classes: list[str] | None = None,
@@ -161,8 +162,8 @@ def main() -> None:
     parser.add_argument(
         "--confidence",
         type=float,
-        default=0.10,
-        help="Minimum detection confidence (default: 0.10)",
+        default=0.05,
+        help="Minimum detection confidence (default: 0.05)",
     )
     args = parser.parse_args()
 
