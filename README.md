@@ -12,8 +12,8 @@ The system supports mark-recapture population studies by automatically matching 
 
 | Notebook | Description | Link |
 |----------|-------------|------|
-| **Setup & Training** | Download data, train detection & re-ID models | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danort92/Alytes-ReID/blob/main/notebooks/01_setup_and_training.ipynb) |
-| **Toad Re-ID Tool** | Upload a photo → get individual match | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danort92/Alytes-ReID/blob/main/notebooks/02_toad_reid.ipynb) |
+| **Setup & Training** | Download data, train detection & re-ID models | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danort92/Alytes-ReID/blob/claude/alytes-reid-system-qgved/notebooks/01_setup_and_training.ipynb) |
+| **Toad Re-ID Tool** | Upload a photo → get individual match | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danort92/Alytes-ReID/blob/claude/alytes-reid-system-qgved/notebooks/02_toad_reid.ipynb) |
 
 ### Gradio Web App
 
@@ -38,7 +38,7 @@ Input Image → [Detection] → [Segmentation] → [Preprocessing] → [Re-ID] �
 ```
 
 ### Module 1: Detection & Segmentation
-- **YOLOv8** detects the toad bounding box in the photo
+- **YOLO11** detects the toad bounding box in the photo
 - **SAM2** (Segment Anything Model 2) generates a precise segmentation mask using the bounding box as prompt
 - Why two-stage: SAM2 works well zero-shot, produces superior masks, and requires less annotation
 
@@ -156,7 +156,7 @@ pytest tests/ -v
 
 | Component | Library |
 |-----------|---------|
-| Detection | Ultralytics YOLOv8 |
+| Detection | Ultralytics YOLO11 |
 | Segmentation | SAM2 |
 | Re-ID backbone | timm (EfficientNet-B0) |
 | Metric learning | pytorch-metric-learning (ArcFace) |

@@ -2,8 +2,8 @@
 torch>=2.0.0
 torchvision>=0.15.0
 
-# Detection
-ultralytics>=8.1.0
+# Detection — YOLO11 requires ultralytics>=8.3.0
+ultralytics>=8.3.0
 
 # Segmentation
 segment-anything-2>=0.1.0

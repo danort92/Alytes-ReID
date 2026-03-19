@@ -1,8 +1,10 @@
-# YOLOv8 Detection Configuration
+# YOLO11 Detection Configuration
 # ================================
+# YOLO11 is the latest Ultralytics model (2024), successor to YOLOv8.
+# Same API, better accuracy/speed tradeoff. Weights auto-downloaded on first run.
 
 model:
-  architecture: "yolov8s"        # yolov8n (faster) or yolov8s (more accurate)
+  architecture: "yolo11s"        # yolo11n (fastest) | yolo11s | yolo11m | yolo11l | yolo11x
   pretrained: true
   num_classes: 1                  # single class: "toad"
   confidence_threshold: 0.5

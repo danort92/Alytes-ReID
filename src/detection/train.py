@@ -1,4 +1,14 @@
-"""YOLOv8 fine-tuning for toad detection.
+"""YOLO11 fine-tuning for toad detection.
+
+YOLO11 is the latest Ultralytics model (2024). Model weights are automatically
+downloaded on first run from ultralytics servers.
+
+Available architectures (set in config/detection.yaml):
+    yolo11n  fastest, least accurate (~2.6M params)
+    yolo11s  good balance for Colab T4 (default)
+    yolo11m  more accurate, heavier
+    yolo11l  large model
+    yolo11x  most accurate
 
 Usage:
     python -m src.detection.train --config config/detection.yaml
@@ -24,7 +34,7 @@ def load_config(config_path: Path) -> dict[str, Any]:
 
 
 def train_detector(config: dict[str, Any]) -> Path:
-    """Train YOLOv8 model for toad detection.
+    """Train YOLO11 model for toad detection.
 
     Args:
         config: Training configuration dictionary.
@@ -67,7 +77,7 @@ def train_detector(config: dict[str, Any]) -> Path:
 
 def main() -> None:
     """CLI entry point."""
-    parser = argparse.ArgumentParser(description="Train YOLOv8 toad detector")
+    parser = argparse.ArgumentParser(description="Train YOLO11 toad detector")
     parser.add_argument(
         "--config",
         type=Path,
