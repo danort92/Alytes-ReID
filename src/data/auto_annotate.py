@@ -1,8 +1,8 @@
-"""Auto-annotate images using a COCO-pretrained YOLO11 model.
+"""Auto-annotate images using YOLO-World (open-vocabulary detector).
 
-YOLO11 pretrained on COCO includes class 8 = "frog". We run inference on
-downloaded images, keep detections for class 8, and save YOLO-format label
-files (remapped to class 0 = "toad" for our single-class detector).
+YOLO-World detects objects by text description, not fixed COCO classes.
+We use prompts like "toad", "frog" to find amphibians in any photo —
+much more robust than COCO class 8 which misses camouflaged toads.
 
 Usage:
     python -m src.data.auto_annotate --images data/raw/inaturalist --output data/raw/auto_labels
@@ -16,8 +16,8 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-# COCO class 8 = "frog" (covers toads too — COCO has no separate toad class)
-COCO_FROG_CLASS = 8
+# Text prompts for open-vocabulary detection
+DEFAULT_CLASSES = ["toad", "frog"]
 
 # Remapped class for our single-class detector
 TARGET_CLASS = 0
@@ -26,20 +26,26 @@ TARGET_CLASS = 0
 def auto_annotate(
     images_dir: Path,
     output_dir: Path,
-    model_name: str = "yolo11s",
-    confidence: float = 0.25,
+    model_name: str = "yolov8s-worldv2",
+    confidence: float = 0.10,
     iou: float = 0.45,
     device: str | None = None,
+    text_classes: list[str] | None = None,
 ) -> dict[str, int]:
-    """Run COCO-pretrained YOLO11 on images and save frog detections as labels.
+    """Run YOLO-World on images and save detections as YOLO-format labels.
+
+    YOLO-World is an open-vocabulary detector: it finds objects matching
+    text descriptions rather than a fixed set of COCO classes. This works
+    much better for wildlife photos where COCO classes fail.
 
     Args:
         images_dir: Directory containing images to annotate.
         output_dir: Directory to save YOLO-format .txt label files.
-        model_name: YOLO model to use (weights auto-download on first run).
+        model_name: YOLO-World model to use (auto-downloads on first run).
         confidence: Minimum detection confidence.
         iou: NMS IoU threshold.
         device: Device for inference (None = auto).
+        text_classes: Text prompts for detection (default: ["toad", "frog"]).
 
     Returns:
         Dictionary with annotation statistics.
@@ -51,9 +57,14 @@ def auto_annotate(
             "ultralytics package required. Install with: pip install ultralytics"
         )
 
+    if text_classes is None:
+        text_classes = DEFAULT_CLASSES
+
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    # Load YOLO-World and set text prompts
     model = YOLO(f"{model_name}.pt")
+    model.set_classes(text_classes)
 
     image_extensions = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
     image_paths = sorted(
@@ -65,7 +76,11 @@ def auto_annotate(
         logger.warning("No images found in %s", images_dir)
         return {"total_images": 0, "annotated": 0, "skipped": 0, "total_boxes": 0}
 
-    logger.info("Running auto-annotation on %d images...", len(image_paths))
+    logger.info(
+        "Running YOLO-World auto-annotation on %d images (classes: %s)...",
+        len(image_paths),
+        text_classes,
+    )
 
     annotated = 0
     skipped = 0
@@ -80,7 +95,6 @@ def auto_annotate(
             conf=confidence,
             iou=iou,
             device=device,
-            classes=[COCO_FROG_CLASS],
             verbose=False,
         )
 
@@ -91,10 +105,10 @@ def auto_annotate(
                 continue
 
             # Write YOLO-format label file
+            # All detections (toad/frog) map to class 0 = "toad"
             label_path = output_dir / f"{img_path.stem}.txt"
             lines = []
             for box in boxes:
-                # box.xywhn = normalized [x_center, y_center, width, height]
                 xywhn = box.xywhn[0].tolist()
                 lines.append(
                     f"{TARGET_CLASS} {xywhn[0]:.6f} {xywhn[1]:.6f} "
@@ -124,7 +138,7 @@ def auto_annotate(
 def main() -> None:
     """CLI entry point."""
     parser = argparse.ArgumentParser(
-        description="Auto-annotate images using COCO-pretrained YOLO11"
+        description="Auto-annotate images using YOLO-World (open-vocabulary)"
     )
     parser.add_argument(
         "--images",
@@ -141,14 +155,14 @@ def main() -> None:
     parser.add_argument(
         "--model",
         type=str,
-        default="yolo11s",
-        help="YOLO model name (default: yolo11s)",
+        default="yolov8s-worldv2",
+        help="YOLO-World model name (default: yolov8s-worldv2)",
     )
     parser.add_argument(
         "--confidence",
         type=float,
-        default=0.25,
-        help="Minimum detection confidence (default: 0.25)",
+        default=0.10,
+        help="Minimum detection confidence (default: 0.10)",
     )
     args = parser.parse_args()
 
