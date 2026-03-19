@@ -1,0 +1,38 @@
+# YOLOv8 Detection Configuration
+# ================================
+
+model:
+  architecture: "yolov8s"        # yolov8n (faster) or yolov8s (more accurate)
+  pretrained: true
+  num_classes: 1                  # single class: "toad"
+  confidence_threshold: 0.5
+  iou_threshold: 0.45
+
+training:
+  epochs: 100
+  batch_size: 16
+  image_size: 640
+  learning_rate: 0.01
+  optimizer: "SGD"
+  patience: 20                    # early stopping patience
+  augmentation: true
+  device: "auto"                  # "auto", "cpu", "cuda:0"
+
+data:
+  dataset_dir: "data/processed/detection"
+  train_split: 0.8
+  val_split: 0.15
+  test_split: 0.05
+  classes:
+    - "toad"
+
+export:
+  model_dir: "data/models/detection"
+  format: "torchscript"           # export format for deployment
+
+inference:
+  batch_size: 1
+  image_size: 640
+  confidence_threshold: 0.5
+  iou_threshold: 0.45
+  max_detections: 5

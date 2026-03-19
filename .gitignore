@@ -1,0 +1,48 @@
+# Data and models (large files)
+data/raw/
+data/processed/
+data/models/
+*.pt
+*.pth
+*.onnx
+!requirements.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local

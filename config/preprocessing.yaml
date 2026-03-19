@@ -1,0 +1,35 @@
+# Preprocessing & Standardization Configuration
+# ===============================================
+
+cropping:
+  padding_ratio: 0.05             # padding around mask bounding box (fraction)
+  min_size: 64                    # minimum crop size in pixels
+
+background:
+  method: "mask"                  # "mask" (apply binary mask) or "inpaint"
+  fill_color: [0, 0, 0]          # background fill color (black)
+
+alignment:
+  method: "pca"                   # "pca" (fast) or "keypoint" (robust)
+  orient_head_up: true            # ensure head is always at the top
+
+resize:
+  target_size: [256, 256]         # output resolution [height, width]
+  interpolation: "bilinear"       # "bilinear", "bicubic", "nearest"
+  maintain_aspect_ratio: true     # pad to maintain aspect ratio
+  pad_color: [0, 0, 0]           # padding color if maintaining aspect ratio
+
+color_normalization:
+  method: "clahe"                 # "clahe", "histogram_eq", "none"
+  clahe:
+    clip_limit: 2.0
+    tile_grid_size: [8, 8]
+
+dorsal_extraction:
+  enabled: false                  # extract dorsal region only (exclude limbs)
+  method: "convex_hull"           # "convex_hull" or "erosion"
+  erosion_kernel_size: 5
+
+output:
+  format: "png"
+  directory: "data/processed/standardized"
