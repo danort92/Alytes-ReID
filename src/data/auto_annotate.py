@@ -14,8 +14,6 @@ import argparse
 import logging
 from pathlib import Path
 
-from ultralytics import YOLO
-
 logger = logging.getLogger(__name__)
 
 # COCO class 8 = "frog" (covers toads too — COCO has no separate toad class)
@@ -46,6 +44,13 @@ def auto_annotate(
     Returns:
         Dictionary with annotation statistics.
     """
+    try:
+        from ultralytics import YOLO
+    except ImportError:
+        raise ImportError(
+            "ultralytics package required. Install with: pip install ultralytics"
+        )
+
     output_dir.mkdir(parents=True, exist_ok=True)
 
     model = YOLO(f"{model_name}.pt")
