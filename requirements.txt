@@ -5,8 +5,10 @@ torchvision>=0.15.0
 # Detection — YOLO11 requires ultralytics>=8.3.0
 ultralytics>=8.3.0
 
-# Segmentation
-segment-anything-2>=0.1.0
+# Segmentation (SAM2 — installed from GitHub, not PyPI)
+# pip install git+https://github.com/facebookresearch/sam2.git
+# Uncomment the line above or install manually; excluded from pip install -r
+# because it requires a full git clone + build.
 
 # Re-ID / Metric Learning
 pytorch-metric-learning>=2.3.0
